@@ -15,6 +15,7 @@ type UI interface {
 	Bounds() (Bounds, error)
 	SetBounds(Bounds) error
 	Bind(name string, f interface{}) error
+	AddScriptToEvaluateOnNewDocument(js string) error
 	Eval(js string) Value
 	Done() <-chan struct{}
 	Close() error
@@ -165,6 +166,10 @@ func (u *ui) Bind(name string, f interface{}) error {
 func (u *ui) Eval(js string) Value {
 	v, err := u.chrome.eval(js)
 	return value{err: err, raw: v}
+}
+
+func (u *ui) AddScriptToEvaluateOnNewDocument(js string) error {
+	return u.chrome.addScriptToEvaluateOnNewDocument(js)
 }
 
 func (u *ui) SetBounds(b Bounds) error {
